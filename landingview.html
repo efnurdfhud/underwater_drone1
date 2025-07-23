@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drone Live View</title>
+<style>
+  body {
+    margin:0;
+    font-family:'Segoe UI',sans-serif;
+    color:#EEEEEE;
+    background:linear-gradient(135deg,#222831,#2D4059,#FF5722,#EEEEEE);
+    background-size:600% 600%;
+    animation:gradientMove 12s ease infinite;
+  }
+  @keyframes gradientMove {
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+  }
+  header {
+    background:rgba(0,0,0,0.4);
+    padding:15px;
+    text-align:center;
+  }
+  header h1 {
+    margin:0;
+    font-size:28px;
+    text-shadow:0 0 6px #FF5722;
+  }
+  nav {
+    margin-top:8px;
+  }
+  nav a {
+    color:#EEEEEE;
+    text-decoration:none;
+    margin:0 8px;
+    font-weight:bold;
+  }
+  nav a:hover {
+    color:#FF5722;
+  }
+  main {
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:20px;
+  }
+  .status-box {
+    background:rgba(0,0,0,0.35);
+    padding:15px 20px;
+    border-radius:12px;
+    width:90%;
+    max-width:400px;
+    box-shadow:0 0 10px #FF5722;
+  }
+  .status-title {
+    font-size:20px;
+    margin-bottom:6px;
+    color:#FF5722;
+  }
+  .status-value {
+    font-size:24px;
+    font-weight:bold;
+  }
+  .profile, .captures {
+    background:rgba(0,0,0,0.35);
+    padding:15px 20px;
+    border-radius:12px;
+    width:90%;
+    max-width:400px;
+    box-shadow:0 0 10px #FF5722;
+    position:relative;
+  }
+  .profile img, .captures img {
+    width:100%;
+    max-width:350px;
+    margin-top:10px;
+    border-radius:8px;
+    border:2px solid #FF5722;
+  }
+  /* Buttons inside profile and captures */
+  .inline-button {
+    position:absolute;
+    top:15px;
+    right:15px;
+    background:#FF5722;
+    border:none;
+    color:#EEEEEE;
+    font-weight:bold;
+    padding:6px 10px;
+    border-radius:6px;
+    cursor:pointer;
+    box-shadow:0 0 6px #FF5722;
+  }
+  .inline-button:hover {
+    background:#e04c1f;
+  }
+
+ /* Big drone button */
+  .drone-button {
+    display:inline-block;
+    margin-top:20px;
+    padding:16px 24px;
+    font-size:18px;
+    font-weight:bold;
+    color:#222831;
+    background:#FF5722;
+    border:none;
+    border-radius:12px;
+    box-shadow:0 0 12px #FF5722;
+    text-decoration:none;
+    transition:transform 0.2s ease;
+  }
+  .drone-button:hover {
+    transform:scale(1.05);
+    box-shadow:0 0 20px #FF5722;
+  }
+
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🚁 Drone Live View</h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="liveview.html" style="color:#FF5722;">Live View</a>
+    <a href="scanning.html">Scanning</a>
+    <a href="drilling.html">Drilling</a>
+    <a href="analytics.html">Analytics</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+
+
+<main>
+
+   <button onclick="startDrone()">drone-button</button>
+
+  <!-- Battery -->
+  <div class="status-box">
+    <div class="status-title">Battery</div>
+    <div class="status-value" id="battery">87%</div>
+  </div>
+
+  <!-- xcoord -->
+  <div class="status-box">
+    <div class="status-title">X Coordinates</div>
+    <div class="status-value" id="xcoord">400</div>
+  </div>
+
+   <!-- ycoord -->
+  <div class="status-box">
+    <div class="status-title">Y Coordinates</div>
+    <div class="status-value" id="ycoord">70</div>
+  </div>
+
+  <!-- Drone Activity -->
+  <div class="status-box">
+    <div class="status-title">Drone Activity</div>
+    <div class="status-value" id="Drone Activity">Active</div>
+  </div>
+
+  <!-- Time Remaining -->
+  <div class="status-box">
+    <div class="status-title">Time Remaining</div>
+    <div class="status-value" id="time">12 hrs</div>
+  </div>
+
+  <div class="live view">
+    <div class="status-title">Live View Drone_01</div>
+   <video width="400" height="200" controls>
+    <source src="live view.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  </div>
+
+
+ 
+  <div class="capture">
+    <div class="status-title">Capture</div>
+   <video width="400" height="200" controls>
+    <source src="capture.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  </div>
+</main>
+    <center>
+    <a href="drone.html" class="drone-button">🧭 Start Drone </a> 
+    </center>
+
+
+<script>
+
+  
+function startDrone() {
+  for (int i = 0, i < 100, i++) {
+    document.getElementById('xcoord').innerText = i + " g/cm³";
+
+  }
+}
+
+</script>
+</body>
+</html>
+

@@ -1,0 +1,74 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to bottom, #001f33, #ff4500, #ffe0cc);
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+h1 {
+  color: #ffcc66;
+  text-shadow: 0 0 8px #ffcc66;
+  text-align: center;
+}
+
+.container, .thankyou {
+  width: 100%;
+  max-width: 400px;
+  background: rgba(0,0,0,0.4);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 0 10px #ff9900;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 6px;
+  border: 1px solid #ff9900;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  font-size: 14px;
+}
+
+button {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background: none;
+  border: 2px solid #ffcc66;
+  color: #ffcc66;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 6px;
+  text-shadow: 0 0 5px #ffcc66;
+  box-shadow: 0 0 5px #ffcc66;
+  cursor: pointer;
+  margin-top: 10px;
+}
+button:hover {
+  background: rgba(255,204,102,0.2);
+}
+
+.alt-contact {
+  margin-top: 20px;
+  font-size: 14px;
+  text-align: center;
+}
+.alt-contact a {
+  color: #ff99ff;
+}
+
+.thankyou {
+  display: none;
+  text-align: center;
+}
+.thankyou h2 {
+  color: #ffff66;
+  text-shadow: 0 0 8px #ffff66;
+}

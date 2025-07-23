@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drilling Control Interface</title>
+<style>
+  body {
+    background: linear-gradient(to bottom, #00111a, #000);
+    color: #00eaff;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+  }
+  h1 {
+    text-shadow: 0 0 8px #00eaff;
+    margin-bottom: 20px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  .box {
+    border: 2px solid #00eaff;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 0 8px #00eaff;
+  }
+  .wide-box {
+    grid-column: span 2;
+    border: 2px solid #00eaff;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 0 8px #00eaff;
+    margin-bottom: 10px;
+  }
+  #progressContainer {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid #00eaff;
+    border-radius: 8px;
+    height: 20px;
+    width: 100%;
+    margin: 15px 0;
+    overflow: hidden;
+  }
+  #progressBar {
+    background: #00eaff;
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s;
+  }
+  button {
+    background: none;
+    border: 2px solid #00eaff;
+    border-radius: 6px;
+    color: #00eaff;
+    padding: 10px 16px;
+    margin: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    text-shadow: 0 0 6px #00eaff;
+    box-shadow: 0 0 6px #00eaff;
+  }
+  button:hover {
+    background: rgba(0,234,255,0.2);
+  }
+</style>
+</head>
+<body>
+<h1>🔧 DRILLING CONTROL INTERFACE</h1>
+
+<div class="grid">
+  <div class="box">DEPTH<br><span id="depth">0 m</span></div>
+  <div class="box">TEMP<br><span id="temp">25°C</span></div>
+  <div class="box">ENERGY<br><span id="energy">100%</span></div>
+  <div class="box">MINERALS<br><span id="minerals">0 kg</span></div>
+  <div class="box">ROCK DENSITY<br><span id="density">0 g/cm³</span></div>
+  <div class="box">YIELD PREDICTION<br><span id="yield_prediction">0 kg</span></div>
+</div>
+
+<div class="wide-box">YIELD/ENERGY<br><span id="ratio">0</span></div>
+
+<div id="progressContainer">
+  <div id="progressBar"></div>
+</div>
+
+<div>
+  <button onclick="startDrill()">START</button>
+  <button onclick="stopDrill()">STOP</button>
+  <button onclick="resetDrill()">RESET</button>
+</div>
+<div>
+  <button onclick="sendToRefinery()">SEND TO REFINERY</button>
+</div>
+
+<script>
+const drillingData = [
+  { 'progress': 0.0, 'depth': 0.0, 'temp': 14.0, 'energy': 100.0, 'minerals': 0.0, 'density': 2.6, 'yield_prediction': 100.0, 'ratio': 0.0 },
+  { 'progress': 2.0, 'depth': 10.0, 'temp': 14.0, 'energy': 98.5, 'minerals': 0.2, 'density': 2.6, 'yield_prediction': 98.8, 'ratio': 0.0 },
+  { 'progress': 4.0, 'depth': 20.0, 'temp': 14.0, 'energy': 97.0, 'minerals': 0.5, 'density': 2.6, 'yield_prediction': 97.6, 'ratio': 0.01 },
+  { 'progress': 6.0, 'depth': 30.0, 'temp': 14.0, 'energy': 95.5, 'minerals': 0.8, 'density': 2.6, 'yield_prediction': 96.4, 'ratio': 0.01 },
+  { 'progress': 8.0, 'depth': 40.0, 'temp': 14.0, 'energy': 94.0, 'minerals': 1.2, 'density': 2.6, 'yield_prediction': 95.2, 'ratio': 0.01 },
+  { 'progress': 10.0, 'depth': 50.0, 'temp': 14.0, 'energy': 92.5, 'minerals': 1.6, 'density': 2.6, 'yield_prediction': 94.0, 'ratio': 0.02 },
+  { 'progress': 12.0, 'depth': 60.0, 'temp': 14.0, 'energy': 91.0, 'minerals': 2.1, 'density': 2.6, 'yield_prediction': 92.8, 'ratio': 0.02 },
+  { 'progress': 14.0, 'depth': 70.0, 'temp': 14.0, 'energy': 89.5, 'minerals': 2.5, 'density': 2.6, 'yield_prediction': 91.6, 'ratio': 0.03 },
+  { 'progress': 16.0, 'depth': 80.0, 'temp': 14.0, 'energy': 88.0, 'minerals': 3.0, 'density': 2.6, 'yield_prediction': 90.4, 'ratio': 0.03 },
+  { 'progress': 18.0, 'depth': 90.0, 'temp': 14.0, 'energy': 86.5, 'minerals': 3.5, 'density': 2.6, 'yield_prediction': 89.2, 'ratio': 0.04 },
+  { 'progress': 20.0, 'depth': 100.0, 'temp': 14.0, 'energy': 85.0, 'minerals': 4.0, 'density': 2.6, 'yield_prediction': 88.0, 'ratio': 0.05 },
+  { 'progress': 22.0, 'depth': 100, 'temp': 14.0, 'energy': 83.5, 'minerals': 4.5, 'density': 2.6, 'yield_prediction': 86.8, 'ratio': 0.05 },
+  { 'progress': 24.0, 'depth': 100, 'temp': 14.0, 'energy': 82.0, 'minerals': 5.1, 'density': 2.6, 'yield_prediction': 85.6, 'ratio': 0.06 },
+  { 'progress': 26.0, 'depth': 100, 'temp': 14.0, 'energy': 80.5, 'minerals': 5.6, 'density': 2.6, 'yield_prediction': 84.4, 'ratio': 0.07 },
+  { 'progress': 28.0, 'depth': 100, 'temp': 14.0, 'energy': 79.0, 'minerals': 6.2, 'density': 2.6, 'yield_prediction': 83.2, 'ratio': 0.08 },
+  { 'progress': 30.0, 'depth': 100, 'temp': 14.0, 'energy': 77.5, 'minerals': 6.8, 'density': 2.6, 'yield_prediction': 82.0, 'ratio': 0.09 },
+  { 'progress': 32.0, 'depth': 100, 'temp': 14.0, 'energy': 76.0, 'minerals': 7.4, 'density': 2.6, 'yield_prediction': 80.8, 'ratio': 0.1 },
+  { 'progress': 34.0, 'depth': 100, 'temp': 14.0, 'energy': 74.5, 'minerals': 8.0, 'density': 2.6, 'yield_prediction': 79.6, 'ratio': 0.11 },
+  { 'progress': 36.0, 'depth': 100, 'temp': 14.0, 'energy': 73.0, 'minerals': 8.6, 'density': 2.6, 'yield_prediction': 78.4, 'ratio': 0.12 },
+  { 'progress': 38.0, 'depth': 100, 'temp': 14.0, 'energy': 71.5, 'minerals': 9.2, 'density': 2.6, 'yield_prediction': 77.2, 'ratio': 0.13 },
+  { 'progress': 40.0, 'depth': 100, 'temp': 14.0, 'energy': 70.0, 'minerals': 9.8, 'density': 2.6, 'yield_prediction': 76.0, 'ratio': 0.14 },
+  { 'progress': 42.0, 'depth': 100, 'temp': 14.0, 'energy': 68.5, 'minerals': 10.5, 'density': 2.6, 'yield_prediction': 74.8, 'ratio': 0.15 },
+  { 'progress': 44.0, 'depth': 100, 'temp': 14.0, 'energy': 67.0, 'minerals': 11.1, 'density': 2.6, 'yield_prediction': 73.6, 'ratio': 0.17 },
+  { 'progress': 46.0, 'depth': 100, 'temp': 14.0, 'energy': 65.5, 'minerals': 11.8, 'density': 2.6, 'yield_prediction': 72.4, 'ratio': 0.18 },
+  { 'progress': 48.0, 'depth': 100, 'temp': 14.0, 'energy': 64.0, 'minerals': 12.5, 'density': 2.6, 'yield_prediction': 71.2, 'ratio': 0.19 },
+  { 'progress': 50.0, 'depth': 100, 'temp': 14.0, 'energy': 62.5, 'minerals': 13.1, 'density': 2.6, 'yield_prediction': 70.0, 'ratio': 0.21 },
+  { 'progress': 52.0, 'depth': 100, 'temp': 14.0, 'energy': 61.0, 'minerals': 13.8, 'density': 2.6, 'yield_prediction': 68.8, 'ratio': 0.23 },
+  { 'progress': 54.0, 'depth': 100, 'temp': 14.0, 'energy': 59.5, 'minerals': 14.5, 'density': 2.6, 'yield_prediction': 67.6, 'ratio': 0.24 },
+  { 'progress': 56.0, 'depth': 100, 'temp': 14.0, 'energy': 58.0, 'minerals': 15.2, 'density': 2.6, 'yield_prediction': 66.4, 'ratio': 0.26 },
+  { 'progress': 58.0, 'depth': 100, 'temp': 14.0, 'energy': 56.5, 'minerals': 15.9, 'density': 2.6, 'yield_prediction': 65.2, 'ratio': 0.28 },
+  { 'progress': 60.0, 'depth': 100, 'temp': 14.0, 'energy': 55.0, 'minerals': 16.6, 'density': 2.6, 'yield_prediction': 64.0, 'ratio': 0.3 },
+  { 'progress': 62.0, 'depth': 100, 'temp': 14.0, 'energy': 53.5, 'minerals': 17.4, 'density': 2.6, 'yield_prediction': 62.8, 'ratio': 0.32 },
+  { 'progress': 64.0, 'depth': 100, 'temp': 14.0, 'energy': 52.0, 'minerals': 18.1, 'density': 2.6, 'yield_prediction': 61.6, 'ratio': 0.35 },
+  { 'progress': 66.0, 'depth': 100, 'temp': 14.0, 'energy': 50.5, 'minerals': 18.8, 'density': 2.6, 'yield_prediction': 60.4, 'ratio': 0.37 },
+  { 'progress': 68.0, 'depth': 100, 'temp': 14.0, 'energy': 49.0, 'minerals': 19.6, 'density': 2.6, 'yield_prediction': 59.2, 'ratio': 0.4 },
+  { 'progress': 70.0, 'depth': 100, 'temp': 14.0, 'energy': 47.5, 'minerals': 20.3, 'density': 2.6, 'yield_prediction': 58.0, 'ratio': 0.43 },
+  { 'progress': 72.0, 'depth': 100, 'temp': 14.0, 'energy': 46.0, 'minerals': 21.1, 'density': 2.6, 'yield_prediction': 56.8, 'ratio': 0.46 },
+  { 'progress': 74.0, 'depth': 100, 'temp': 14.0, 'energy': 44.5, 'minerals': 21.9, 'density': 2.6, 'yield_prediction': 55.6, 'ratio': 0.49 },
+  { 'progress': 76.0, 'depth': 100, 'temp': 14.0, 'energy': 43.0, 'minerals': 22.6, 'density': 2.6, 'yield_prediction': 54.4, 'ratio': 0.53 },
+  { 'progress': 78.0, 'depth': 100, 'temp': 14.0, 'energy': 41.5, 'minerals': 23.4, 'density': 2.6, 'yield_prediction': 53.2, 'ratio': 0.56 },
+  { 'progress': 80.0, 'depth': 100, 'temp': 14.0, 'energy': 40.0, 'minerals': 24.2, 'density': 2.6, 'yield_prediction': 52.0, 'ratio': 0.6 },
+  { 'progress': 82.0, 'depth': 100, 'temp': 14.0, 'energy': 38.5, 'minerals': 25.0, 'density': 2.6, 'yield_prediction': 50.8, 'ratio': 0.65 },
+  { 'progress': 84.0, 'depth': 100, 'temp': 14.0, 'energy': 37.0, 'minerals': 25.8, 'density': 2.6, 'yield_prediction': 49.6, 'ratio': 0.7 },
+  { 'progress': 86.0, 'depth': 100, 'temp': 14.0, 'energy': 35.5, 'minerals': 26.6, 'density': 2.6, 'yield_prediction': 48.4, 'ratio': 0.75 },
+  { 'progress': 88.0, 'depth': 100, 'temp': 14.0, 'energy': 34.0, 'minerals': 27.4, 'density': 2.6, 'yield_prediction': 47.2, 'ratio': 0.81 },
+  { 'progress': 90.0, 'depth': 100, 'temp': 14.0, 'energy': 32.5, 'minerals': 28.2, 'density': 2.6, 'yield_prediction': 46.0, 'ratio': 0.87 },
+  { 'progress': 92.0, 'depth': 100, 'temp': 14.0, 'energy': 31.0, 'minerals': 29.0, 'density': 2.6, 'yield_prediction': 44.8, 'ratio': 0.94 },
+  { 'progress': 94.0, 'depth': 100, 'temp': 14.0, 'energy': 29.5, 'minerals': 29.8, 'density': 2.6, 'yield_prediction': 43.6, 'ratio': 1.01 },
+  { 'progress': 96.0, 'depth': 100, 'temp': 14.0, 'energy': 28.0, 'minerals': 30.7, 'density': 2.6, 'yield_prediction': 42.4, 'ratio': 1.1 },
+  { 'progress': 98.0, 'depth': 100, 'temp': 14.0, 'energy': 26.5, 'minerals': 31.5, 'density': 2.6, 'yield_prediction': 41.2, 'ratio': 1.19 },
+  { 'progress': 100.0, 'depth': 100, 'temp': 14.0, 'energy': 25.0, 'minerals': 32.3, 'density': 2.6, 'yield_prediction': 40.0, 'ratio': 1.29 }
+];
+
+
+let currentIndex = 0;
+let drilling = false;
+let interval;
+
+function updateUI(data) {
+  document.getElementById('depth').innerText = data.depth + " m";
+  document.getElementById('temp').innerText = data.temp + "°C";
+  document.getElementById('energy').innerText = data.energy + "%";
+  document.getElementById('minerals').innerText = data.minerals + " kg";
+  document.getElementById('density').innerText = data.density + " g/cm³";
+  document.getElementById('yield_prediction').innerText = data.yield_prediction + " kg";
+  document.getElementById('ratio').innerText = data.ratio;
+  document.getElementById('progressBar').style.width = data.progress + "%";
+}
+
+function startDrill() {
+  if (drilling) return;
+  drilling = true;
+  interval = setInterval(()=>{
+    if (currentIndex >= drillingData.length) {
+      clearInterval(interval);
+      drilling = false;
+      return;
+    }
+    updateUI(drillingData[currentIndex]);
+    currentIndex++;
+  }, 300);
+}
+
+function stopDrill() {
+  clearInterval(interval);
+  drilling = false;
+}
+
+function resetDrill() {
+  clearInterval(interval);
+  drilling = false;
+  currentIndex = 0;
+  updateUI(drillingData[0]);
+}
+
+function sendToRefinery() {
+  alert("Data sent to refinery!");
+  resetDrill();
+}
+
+// Initialize with first data
+updateUI(drillingData[0]);
+</script>
+</body>
+</html>
+

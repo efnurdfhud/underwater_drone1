@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scanning Interface</title>
+<style>
+  body {
+    margin:0;
+    font-family:'Segoe UI',sans-serif;
+    color:#EEEEEE;
+    background:linear-gradient(135deg,#222831,#2D4059,#FF5722,#EEEEEE);
+    background-size:600% 600%;
+    animation:grad 12s ease infinite;
+  }
+  @keyframes grad {
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+  }
+  header {
+    background:rgba(0,0,0,0.4);
+    padding:15px;
+    text-align:center;
+  }
+  header h1 {
+    margin:0;
+    font-size:26px;
+    text-shadow:0 0 6px #FF5722;
+  }
+  nav {
+    margin-top:8px;
+  }
+  nav a {
+    color:#EEEEEE;
+    text-decoration:none;
+    margin:0 8px;
+    font-weight:bold;
+  }
+  nav a:hover {
+    color:#FF5722;
+  }
+
+  main {
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:24px;
+  }
+
+  /* Radar area */
+  .radar {
+    position:relative;
+    width:260px;
+    height:260px;
+    border-radius:50%;
+    border:4px solid #FF5722;
+    overflow:hidden;
+    background:rgba(0,0,0,0.3);
+    box-shadow:0 0 20px #FF5722;
+  }
+  .scanner-line {
+    position:absolute;
+    width:50%;
+    height:2px;
+    background:#FF5722;
+    top:50%;
+    left:50%;
+    transform-origin:left center;
+    animation:spin 2s linear infinite;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Info panel */
+  .info-panel {
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:12px;
+    width:90%;
+    max-width:500px;
+  }
+  .info-box {
+    background:rgba(255,255,255,0.1);
+    padding:12px;
+    border-radius:8px;
+    box-shadow:0 0 8px #FF5722;
+  }
+  .info-box h3 {
+    margin:0 0 6px;
+    font-size:14px;
+    color:#FF5722;
+  }
+  .info-box p {
+    margin:0;
+    font-size:16px;
+  }
+
+  /* Big mineral button */
+  .mineral-button {
+    display:inline-block;
+    margin-top:20px;
+    padding:16px 24px;
+    font-size:18px;
+    font-weight:bold;
+    color:#222831;
+    background:#FF5722;
+    border:none;
+    border-radius:12px;
+    box-shadow:0 0 12px #FF5722;
+    text-decoration:none;
+    transition:transform 0.2s ease;
+  }
+  .mineral-button:hover {
+    transform:scale(1.05);
+    box-shadow:0 0 20px #FF5722;
+  }
+</style>
+</head>
+<body>
+  <header>
+    <h1>🔎 Scanning Mode</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="drilling.html">Drilling</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="radar">
+      <div class="scanner-line"></div>
+    </div>
+
+    <div class="info-panel">
+      <div class="info-box">
+        <h3>Coordinates</h3>
+        <p>27.13°N, 78.03°E</p>
+      </div>
+      <div class="info-box">
+        <h3>Sea Level Depth</h3>
+        <p>325 m</p>
+      </div>
+      <div class="info-box">
+        <h3>Water Temp</h3>
+        <p>12.6 °C</p>
+      </div>
+      <div class="info-box">
+        <h3>Mineral Probability</h3>
+        <p>78%</p>
+      </div>
+      <div class="info-box">
+        <h3>Magnetic Anomaly</h3>
+        <p>Moderate</p>
+      </div>
+      <div class="info-box">
+        <h3>Scan Progress</h3>
+        <p>52%</p>
+      </div>
+    </div>
+
+    <a href="mineral-targets.html" class="mineral-button">🧭 Mineral Target Sites</a>
+  </main>
+</body>
+</html>
